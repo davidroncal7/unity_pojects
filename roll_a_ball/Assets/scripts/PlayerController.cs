@@ -1,15 +1,23 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-	private Rigidbody ball_rigidbody;
 	public float f_ball_speed;
+	public Text tx_count_text;
+	public Text tx_win_text;
+
+	private Rigidbody ball_rigidbody;
+	private const string sz_pick_up = "Pick Up";
+	private int i8_count;
 
 	void Start()
 	{
 		ball_rigidbody = GetComponent<Rigidbody> ();
+		i8_count = 0;
+		SetCountText ();
+		tx_win_text.text = "";
 	}
 
 
@@ -28,4 +36,24 @@ public class PlayerController : MonoBehaviour
 
 		ball_rigidbody.AddForce (forces_ball_axis*f_ball_speed);
     }
+
+	void OnTriggerEnter(Collider other) 
+	{
+		if (other.gameObject.CompareTag (sz_pick_up)) 
+		{
+			other.gameObject.SetActive (false);
+			++i8_count;
+			SetCountText ();
+		}
+	}
+
+	void SetCountText()
+	{
+		tx_count_text.text = "Count: " + i8_count.ToString ();
+		if (i8_count >= 10) 
+		{
+			tx_win_text.text = "You Win";
+		}
+	}
 }
+//Destroy(other.gameObject);
